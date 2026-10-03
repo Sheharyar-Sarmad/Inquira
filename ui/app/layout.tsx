@@ -2,8 +2,15 @@ import type { Metadata } from "next";
 import { Inter, Geist_Mono } from "next/font/google";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import SideBar from "@/components/navigation/SideBar";
-import ThreeBG from "@/components/animation/ThreeBG";
 import "./globals.css";
+import dynamic from "next/dynamic";
+import { Suspense } from "react";
+
+// ✅ FIX 1: Dynamically import ThreeBG with SSR disabled.
+// This prevents WebGL / window errors during Vercel's build.
+const ThreeBG = dynamic(() => import("@/components/animation/ThreeBG"), {
+  ssr: false,
+});
 
 const inter = Inter({
   variable: "--font-inter",
@@ -136,11 +143,15 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       </head>
       {/* Column on mobile/tablet (top bar above content), row on xl+ (sidebar beside content). */}
       <body className="flex min-h-dvh flex-col xl:flex-row">
-        {/* Global backdrop: one WebGL context for the whole app, behind all content.
-            Pages must keep transparent backgrounds for it to show through. */}
+        {/* Global backdrop: one WebGL context for the whole app, behind all content. */}
         <ThreeBG className="pointer-events-none fixed inset-0 -z-10 opacity-70 [mask-image:radial-gradient(ellipse_at_center,black_15%,transparent_80%)]" />
+        
         <TooltipProvider delay={150}>
-          <SideBar />
+          {/* FIX 2: Wrap SideBar in Suspense to prevent build errors with usePathname/useSearchParams */}
+          <Suspense fallback={null}>
+            <SideBar />
+          </Suspense>
+          
           {/* A <div>, not <main>: pages already render their own <main>. */}
           <div className="flex min-w-0 flex-1 flex-col">{children}</div>
         </TooltipProvider>
