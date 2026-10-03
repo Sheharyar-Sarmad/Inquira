@@ -3,7 +3,6 @@ import { Inter, Geist_Mono } from "next/font/google";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import SideBar from "@/components/navigation/SideBar";
 import ThreeBGWrapper from "@/components/animation/ThreeBGWrapper"; 
-import SmoothScroll from "@/components/animation/SmoothScroll";
 import "./globals.css";
 import { Suspense } from "react";
 
@@ -96,17 +95,16 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
       <body className="flex min-h-dvh flex-col xl:flex-row">
+        {/* Global backdrop: one WebGL context for the whole app, behind all content. */}
         <ThreeBGWrapper className="pointer-events-none fixed inset-0 -z-10 opacity-70 [mask-image:radial-gradient(ellipse_at_center,black_15%,transparent_80%)]" />
-
+        
         <TooltipProvider delay={150}>
+          {/* Suspense prevents build errors if SideBar uses usePathname or useSearchParams */}
           <Suspense fallback={null}>
             <SideBar />
           </Suspense>
-
-          {/* 👈 2. Wrap children with SmoothScroll */}
-          <SmoothScroll>
-            <div className="flex min-w-0 flex-1 flex-col">{children}</div>
-          </SmoothScroll>
+          
+          <div className="flex min-w-0 flex-1 flex-col">{children}</div>
         </TooltipProvider>
       </body>
     </html>
