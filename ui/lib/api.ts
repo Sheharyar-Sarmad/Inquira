@@ -9,7 +9,7 @@
  * NEXT_PUBLIC_* values are inlined at build time: restart `pnpm dev` after changing it.
  */
 
-const API_ORIGIN = (process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000").replace(/\/+$/, "");
+const API_ORIGIN = process.env.NEXT_API_BASE_URL
 const RESEARCH_BASE = `${API_ORIGIN}/api/v1/research`;
 
 /* ------------------------------- Types ------------------------------------ */
