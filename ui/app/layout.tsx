@@ -2,15 +2,9 @@ import type { Metadata } from "next";
 import { Inter, Geist_Mono } from "next/font/google";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import SideBar from "@/components/navigation/SideBar";
+import ThreeBGWrapper from "@/components/animation/ThreeBGWrapper"; 
 import "./globals.css";
-import dynamic from "next/dynamic";
 import { Suspense } from "react";
-
-// ✅ FIX 1: Dynamically import ThreeBG with SSR disabled.
-// This prevents WebGL / window errors during Vercel's build.
-const ThreeBG = dynamic(() => import("@/components/animation/ThreeBG"), {
-  ssr: false,
-});
 
 const inter = Inter({
   variable: "--font-inter",
@@ -43,11 +37,6 @@ export const metadata: Metadata = {
   authors: [{ name: "Sheharyar Sarmad", url: "https://github.com/Sheharyar-Sarmad" }],
   creator: "Sheharyar Sarmad",
   publisher: "Inquira",
-
-  /* ---------------------------------------------------------------------- */
-  /*  Icons — order matters. Modern browsers pick the first supported type.  */
-  /*  Files must live in /public.                                            */
-  /* ---------------------------------------------------------------------- */
   icons: {
     icon: [
       { url: "/favicon.ico", sizes: "any" },
@@ -55,44 +44,21 @@ export const metadata: Metadata = {
       { url: "/logo.png", type: "image/png", sizes: "512x512" },
     ],
     shortcut: ["/favicon.ico"],
-    apple: [
-      { url: "/logo.png", sizes: "180x180", type: "image/png" },
-    ],
-    other: [
-      {
-        rel: "mask-icon",
-        url: "/logo.svg",
-        color: "#8B5CF6",
-      },
-    ],
+    apple: [{ url: "/logo.png", sizes: "180x180", type: "image/png" }],
+    other: [{ rel: "mask-icon", url: "/logo.svg", color: "#8B5CF6" }],
   },
-
-  /* ---------------------------------------------------------------------- */
-  /*  iOS home-screen support                                               */
-  /* ---------------------------------------------------------------------- */
   appleWebApp: {
     capable: true,
     title: "Inquira",
     statusBarStyle: "black-translucent",
   },
-
-  /* ---------------------------------------------------------------------- */
-  /*  Social previews — logo will appear on Twitter, LinkedIn, Slack, etc.  */
-  /* ---------------------------------------------------------------------- */
   openGraph: {
     type: "website",
     url: SITE_URL,
     siteName: "Inquira",
     title: "Inquira — AI Research Intelligence",
     description: DESCRIPTION,
-    images: [
-      {
-        url: "/logo.png",
-        width: 1200,
-        height: 630,
-        alt: "Inquira",
-      },
-    ],
+    images: [{ url: "/logo.png", width: 1200, height: 630, alt: "Inquira" }],
   },
   twitter: {
     card: "summary_large_image",
@@ -100,24 +66,12 @@ export const metadata: Metadata = {
     description: DESCRIPTION,
     images: ["/logo.png"],
   },
-
-  /* ---------------------------------------------------------------------- */
-  /*  Search-engine / crawler hints                                         */
-  /* ---------------------------------------------------------------------- */
   robots: {
     index: true,
     follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      "max-image-preview": "large",
-    },
+    googleBot: { index: true, follow: true, "max-image-preview": "large" },
   },
-  formatDetection: {
-    telephone: false,
-    email: false,
-    address: false,
-  },
+  formatDetection: { telephone: false, email: false, address: false },
 };
 
 export const viewport = {
@@ -132,7 +86,6 @@ export const viewport = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    // suppressHydrationWarning: required if you add a class-based theme switcher (next-themes) later.
     <html
       lang="en"
       suppressHydrationWarning
@@ -141,18 +94,16 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
-      {/* Column on mobile/tablet (top bar above content), row on xl+ (sidebar beside content). */}
       <body className="flex min-h-dvh flex-col xl:flex-row">
         {/* Global backdrop: one WebGL context for the whole app, behind all content. */}
-        <ThreeBG className="pointer-events-none fixed inset-0 -z-10 opacity-70 [mask-image:radial-gradient(ellipse_at_center,black_15%,transparent_80%)]" />
+        <ThreeBGWrapper className="pointer-events-none fixed inset-0 -z-10 opacity-70 [mask-image:radial-gradient(ellipse_at_center,black_15%,transparent_80%)]" />
         
         <TooltipProvider delay={150}>
-          {/* FIX 2: Wrap SideBar in Suspense to prevent build errors with usePathname/useSearchParams */}
+          {/* Suspense prevents build errors if SideBar uses usePathname or useSearchParams */}
           <Suspense fallback={null}>
             <SideBar />
           </Suspense>
           
-          {/* A <div>, not <main>: pages already render their own <main>. */}
           <div className="flex min-w-0 flex-1 flex-col">{children}</div>
         </TooltipProvider>
       </body>
