@@ -933,32 +933,6 @@ function Composer({
 
           <MicButton value={value} onText={setValue} disabled={busy} />
 
-          <button
-            type="button"
-            aria-pressed={requireApproval}
-            onClick={onToggleApproval}
-            title={
-              requireApproval
-                ? "Ask me before every tool call (on)"
-                : "Approve tool calls automatically (off)"
-            }
-            aria-label={
-              requireApproval
-                ? "Disable tool call approval"
-                : "Enable tool call approval"
-            }
-            className={cn(
-              "flex size-9 shrink-0 items-center justify-center rounded-lg border border-border bg-background text-muted-foreground transition-colors hover:bg-accent hover:text-foreground focus-visible:ring-2 focus-visible:ring-brand/60 focus-visible:outline-none",
-              requireApproval && "border-brand/50 bg-brand-soft text-brand",
-            )}
-          >
-            {requireApproval ? (
-              <ShieldCheck className="size-[17px]" />
-            ) : (
-              <ShieldOff className="size-[17px]" />
-            )}
-          </button>
-
           {busy ? (
             <button
               type="button"

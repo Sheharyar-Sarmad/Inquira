@@ -167,3 +167,30 @@
     scroll-behavior: auto !important;
   }
 }
+
+/* *   *Scrollbar CSS:* */
+/* ```css */
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #07080D; /* Black track */
+}
+
+::-webkit-scrollbar-thumb {
+  background: #8B5CF6; /* Purple thumb */
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #7C3AED; /* Deeper purple on hover */
+}
+
+/* For Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #8B5CF6 #07080D;
+}
