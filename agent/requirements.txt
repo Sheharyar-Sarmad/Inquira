@@ -1,0 +1,35 @@
+# Backend
+fastapi
+uvicorn[standard]
+python-dotenv
+
+# LangChain
+langchain
+langchain-core
+langchain-community
+
+# Groq
+langchain-groq
+
+# Web Search
+tavily
+
+# Web Scraping / Extraction
+firecrawl-py
+
+# Wikipedia
+wikipedia
+
+# Academic Research
+arxiv
+
+# HTTP / API
+httpx
+requests
+
+# Data Validation
+pydantic
+pydantic-settings
+
+# DataBase
+redis
